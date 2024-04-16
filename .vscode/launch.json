@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "EmploySoftAppApplication",
+            "request": "launch",
+            "mainClass": "com.app.employsoft.EmploySoftAppApplication",
+            "projectName": "employsoft-app"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-VideogamesAppApplication<employsoft-app>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.app.employsoft.VideogamesAppApplication",
+            "projectName": "employsoft-app",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=59324 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=employsoft-app"
+        }
+    ]
+}
