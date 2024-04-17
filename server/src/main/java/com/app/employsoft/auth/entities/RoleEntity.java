@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
+@ToString
 public class RoleEntity {
 
     @Id

@@ -1,0 +1,67 @@
+@startuml
+
+class User {
+    - userId: int
+    - firstName: String
+    - lastName: String
+    - email: String
+    - password: String
+    - userType: String
+    
+    + getSupervisorOfTasks(): Set<Task>
+    + getAssignedTasks(): Set<Task>
+    + getSupervisorOfProjects(): Set<Project>
+    + getAssignedProjects(): Set<Project>
+    + getSentMessages(): Set<Message>
+}
+
+class Task {
+    - taskId: int
+    - title: String
+    - description: String
+    - creationDate: DateTime
+    - dueDate: DateTime
+    - priority: String
+    - status: String
+    - supervisorId: int
+    - employeeId: int
+    
+    + getSupervisor(): User  <<MT1>>
+    + getEmployee(): User  <<MT1>>
+    + getProjects(): Set<Project>  <<MTM>>
+}
+
+class Project {
+    - projectId: int
+    - name: String
+    - description: String
+    - startDate: DateTime
+    - estimatedEndDate: DateTime
+    - status: String
+    - supervisorId: int
+    
+    + getSupervisor(): User  <<MT1>>
+    + getAssignedEmployees(): Set<User>  <<MTM>>
+    + getTasks(): Set<Task>  <<MTM>>
+}
+
+class Message {
+    - messageId: int
+    - content: String
+    - creationDate: DateTime
+    - userId: int
+    
+    + getSender(): User  <<MT1>>
+}
+
+User o-- Task 
+User o-- Project 
+User *-- Message 
+Task o-- User 
+Task o-- User 
+Project o-- User 
+Project *-- "many" User 
+Task *-- "many" Project 
+Project *-- "many" Task
+
+@enduml

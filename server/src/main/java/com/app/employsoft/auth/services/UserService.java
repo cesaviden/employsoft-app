@@ -1,39 +1,49 @@
 package com.app.employsoft.auth.services;
 
+import com.app.employsoft.auth.dto.CreateUserRequest;
+import com.app.employsoft.auth.dto.UserResponse;
 import com.app.employsoft.auth.entities.UserEntity;
+import com.app.employsoft.auth.mappers.implementations.UserMapperImpl;
 import com.app.employsoft.auth.repositories.UserDAO;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
 
     private UserDAO userDAO;
+    private UserMapperImpl userMapper;
 
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, UserMapperImpl userMapper) {
         this.userDAO = userDAO;
+        this.userMapper = userMapper;
     }
 
-    public Iterable<UserEntity> getAllUsers() {
-        return userDAO.findAll();
+    public Set<UserResponse> getAllUsers() {
+        List<UserEntity> users =  userDAO.findAll();
+        return new HashSet<>(users.stream().map(userMapper::toUserDto).toList());
     }
 
-    public UserEntity getUserById(Long id) {
+    public UserResponse getUserById(Long id) {
         Optional<UserEntity> userOptional = userDAO.findById(id);
-        return userOptional.orElse(null);
+        if (userOptional.isPresent()) {
+            return userMapper.toUserDto(userOptional.get());
+        }
+        return null;
     }
 
-    public UserEntity updateUser(Long id, UserEntity user) {
+    public UserEntity updateUser(Long id, CreateUserRequest user) {
         Optional<UserEntity> userOptional = userDAO.findById(id);
         if (userOptional.isPresent()) {
             UserEntity existingUser = userOptional.get();
-            existingUser.setUsername(user.getUsername());
-            existingUser.setPassword(user.getPassword());
-            existingUser.setEnabled(user.isEnabled());
-            existingUser.setAccountNoExpired(user.isAccountNoExpired());
-            existingUser.setAccountNoLocked(user.isAccountNoLocked());
-            existingUser.setCredentialNoExpired(user.isCredentialNoExpired());
-            existingUser.setRoles(user.getRoles()); // Actualizar roles según sea necesario
+            existingUser.setName(user.name());
+            existingUser.setSurname(user.surname());
+            existingUser.setUsername(user.username());
+            existingUser.setEmail(user.email());
             return userDAO.save(existingUser);
         }
         return null;

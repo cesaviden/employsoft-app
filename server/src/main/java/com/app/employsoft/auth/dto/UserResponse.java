@@ -1,14 +1,13 @@
 package com.app.employsoft.auth.dto;
 
-import lombok.Builder;
+import java.util.Set;
 
-
-@Builder
-public record UserDTO(
+public record UserResponse(
     Long id,
     String name,
     String surname,
     String username,
-    String email
-) {
+    String email,
+    Set<RoleDTO> roles) {
+    
 }
