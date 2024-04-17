@@ -3,6 +3,10 @@ package com.app.employsoft.auth.config;
 import com.app.employsoft.auth.config.filter.JwtTokenValidator;
 import com.app.employsoft.auth.services.UserDetailServiceImpl;
 import com.app.employsoft.auth.utils.JwtUtils;
+
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +24,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 
 @Configuration
@@ -35,30 +42,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(http -> {
                     // Configurar los endpoints publicos
-                    http.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                http.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll();
+                http.requestMatchers("/auth/**").permitAll();
 
-                    // Configurar el resto de endpoint - ESPECIFICADOS
-                    http.requestMatchers(HttpMethod.GET, "/api/v1/tasks/**").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/api/v1/tasks/**").hasRole("SUPERVISOR");
-                    http.requestMatchers(HttpMethod.PUT, "/api/v1/tasks/**").hasAnyAuthority("UPDATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/api/v1/tasks/**").hasRole("SUPERVISOR");
-
-                    http.requestMatchers(HttpMethod.GET, "/api/v1/projects/**").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/api/v1/projects/**").hasRole("SUPERVISOR");
-                    http.requestMatchers(HttpMethod.PUT, "/api/v1/projects/**").hasAnyAuthority("UPDATE");
-                    http.requestMatchers(HttpMethod.DELETE, "/api/v1/projects/**").hasRole("SUPERVISOR");
-
-                    http.requestMatchers(HttpMethod.GET, "/api/v1/messages/**").hasAuthority("READ");
-                    http.requestMatchers(HttpMethod.POST, "/api/v1/messages/**").hasAnyRole("SUPERVISOR", "EMPLOYEE");
-                    http.requestMatchers(HttpMethod.PUT, "/api/v1/messages/**").hasAnyAuthority("SUPERVISOR", "EMPLOYEE");
-                    http.requestMatchers(HttpMethod.DELETE, "/api/v1/messages/**").hasAnyRole("SUPERVISOR", "EMPLOYEE");
-                    
-                    // Configurar el resto de endpoint - NO ESPECIFICADOS
-                    http.anyRequest().denyAll();
+                    // Configurar los endpoints privados
+                    http.anyRequest().authenticated();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
@@ -75,6 +68,19 @@ public class SecurityConfig {
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailService);
         return provider;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        // Replace with allowed origins (e.g., your frontend application URL)
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With", "Accept"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

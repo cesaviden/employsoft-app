@@ -9,7 +9,6 @@ import com.app.employsoft.api.dto.CreateProjectRequest;
 import com.app.employsoft.api.dto.ProjectDTO;
 import com.app.employsoft.api.dto.TaskDTO;
 import com.app.employsoft.api.entities.Project;
-import com.app.employsoft.api.entities.Task;
 import com.app.employsoft.api.mappers.interfaces.ProjectMapper;
 import com.app.employsoft.api.repositories.TaskDAO;
 import com.app.employsoft.auth.dto.UserDTO;
@@ -46,44 +45,41 @@ public class ProjectMapperImpl implements ProjectMapper {
     public ProjectDTO toProjectDto(Project project) {
 
         UserEntity supervisorEntity = project.getSupervisor();
-        UserDTO supervisor = new UserDTO(supervisorEntity.getId(), 
-        supervisorEntity.getName(), 
-        supervisorEntity.getSurname(), 
-        supervisorEntity.getUsername(), 
-        supervisorEntity.getEmail());
+        UserDTO supervisor = new UserDTO(supervisorEntity.getId(),
+                supervisorEntity.getName(),
+                supervisorEntity.getSurname(),
+                supervisorEntity.getUsername(),
+                supervisorEntity.getEmail());
 
         HashSet<TaskDTO> tasks = new HashSet<>(project.getTasks()
-        .stream()
-        .map(task -> new TaskDTO(task.getId(), 
-        task.getTitle(), 
-        task.getDescription(), 
-        task.getCreationDate(), 
-        task.getDueDate(), 
-        task.getStatus(), 
-        task.getPriority(), 
-        new UserDTO(task.getSupervisor().getId(), 
-        task.getSupervisor().getName(), 
-        task.getSupervisor().getSurname(), 
-        task.getSupervisor().getUsername(), 
-        task.getSupervisor().getEmail()), 
-        new UserDTO(task.getEmployee().getId(), 
-        task.getEmployee().getName(), 
-        task.getEmployee().getSurname(), 
-        task.getEmployee().getUsername(), 
-        task.getEmployee().getEmail()))).
-        collect(Collectors.toList()));
-    
-        HashSet<UserDTO> assignedEmployees = new HashSet<>(project.getAssignedEmployees().
-        stream().
-        map(user -> 
-        new UserDTO(user.getId(), 
-        user.getName(), 
-        user.getSurname(), 
-        user.getUsername(), 
-        user.getEmail())).
-        collect(Collectors.toList()));
+                .stream()
+                .map(task -> new TaskDTO(task.getId(),
+                        task.getTitle(),
+                        task.getDescription(),
+                        task.getCreationDate(),
+                        task.getDueDate(),
+                        task.getStatus(),
+                        task.getPriority(),
+                        new UserDTO(task.getSupervisor().getId(),
+                                task.getSupervisor().getName(),
+                                task.getSupervisor().getSurname(),
+                                task.getSupervisor().getUsername(),
+                                task.getSupervisor().getEmail()),
+                        new UserDTO(task.getEmployee().getId(),
+                                task.getEmployee().getName(),
+                                task.getEmployee().getSurname(),
+                                task.getEmployee().getUsername(),
+                                task.getEmployee().getEmail())))
+                .collect(Collectors.toList()));
 
-        
+        HashSet<UserDTO> assignedEmployees = new HashSet<>(project.getAssignedEmployees().stream()
+                .map(user -> new UserDTO(user.getId(),
+                        user.getName(),
+                        user.getSurname(),
+                        user.getUsername(),
+                        user.getEmail()))
+                .collect(Collectors.toList()));
+
         return new ProjectDTO(
                 project.getId(),
                 project.getName(),

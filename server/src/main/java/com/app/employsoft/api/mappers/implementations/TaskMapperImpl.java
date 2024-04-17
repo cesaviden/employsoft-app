@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.app.employsoft.api.dto.CreateTaskRequest;
 import com.app.employsoft.api.dto.TaskDTO;
-import com.app.employsoft.api.entities.Project;
 import com.app.employsoft.api.entities.Task;
 import com.app.employsoft.api.mappers.interfaces.TaskMapper;
 import com.app.employsoft.api.repositories.ProjectDAO;
@@ -24,15 +23,10 @@ public class TaskMapperImpl implements TaskMapper {
 
     private UserDAO userDAO;
     private ProjectDAO projectDAO;
-    private UserMapperImpl userMapper;
-    private ProjectMapperImpl projectMapper;
 
-    public TaskMapperImpl(UserDAO userDAO, ProjectDAO projectDAO, UserMapperImpl userMapper,
-            ProjectMapperImpl projectMapper) {
+    public TaskMapperImpl(UserDAO userDAO, ProjectDAO projectDAO) {
         this.userDAO = userDAO;
         this.projectDAO = projectDAO;
-        this.userMapper = userMapper;
-        this.projectMapper = projectMapper;
     }
 
     @Override
@@ -57,8 +51,21 @@ public class TaskMapperImpl implements TaskMapper {
         UserEntity supervisorEntity = task.getSupervisor();
         UserEntity employeeEntity = task.getEmployee();
 
-        UserDTO supervisor = userMapper.toUserDto(supervisorEntity);
-        UserDTO employee = userMapper.toUserDto(employeeEntity);
+        UserDTO supervisor = new UserDTO(
+                supervisorEntity.getId(),
+                supervisorEntity.getName(),
+                supervisorEntity.getSurname(),
+                supervisorEntity.getUsername(),
+                supervisorEntity.getEmail()
+        );
+
+        UserDTO employee = new UserDTO(
+                employeeEntity.getId(),
+                employeeEntity.getName(),
+                employeeEntity.getSurname(),
+                employeeEntity.getUsername(),
+                employeeEntity.getEmail()
+        );
 
         return new TaskDTO(
                 task.getId(),

@@ -1,5 +1,6 @@
 package com.app.employsoft;
 
+import com.app.employsoft.api.entities.Message;
 import com.app.employsoft.api.entities.Project;
 import com.app.employsoft.api.entities.Task;
 import com.app.employsoft.api.entities.enums.ProjectStatus;
@@ -201,6 +202,23 @@ public class EmploySoftAppApplication {
                                         .tasks(Set.of(task3, task4))
                                         .build();
 
+                        /* CREATE MESSAGES */
+
+                        Message message1 = Message.builder()
+                                        .content("Message 1 content")
+                                        .sender(employeeAnyi)
+                                        .build();
+
+                        Message message2 = Message.builder()
+                                        .content("Message 2 content")
+                                        .sender(supervisorSantiago)
+                                        .build();
+
+                        Message message3 = Message.builder()
+                                        .content("Message 3 content")
+                                        .sender(employeeAndrea)
+                                        .build();
+
                         /* SAVE USERS */
                         userDAO.saveAll(List.of(supervisorSantiago, userDaniel, employeeAndrea, employeeAnyi));
 
@@ -209,6 +227,9 @@ public class EmploySoftAppApplication {
 
                         /* SAVE PROJECTS */
                         projectDAO.saveAll(List.of(project1, project2));
+
+                        /* SAVE MESSAGES */
+                        messageDAO.saveAll(List.of(message1, message2, message3));
 
                 };
         }
