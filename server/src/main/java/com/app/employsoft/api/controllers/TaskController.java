@@ -60,6 +60,18 @@ public class TaskController {
         return ResponseEntity.ok().body(taskService.getTaskById(id));
     }
 
+    @GetMapping("/project/{id}")
+    @Operation(summary = "Returns a list of tasks by project", description = "Returns a list of tasks by project")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of tasks found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDTO[].class))
+            }),
+            @ApiResponse(responseCode = "404", description = "Project not found")
+    })
+    public ResponseEntity<?> getTasksByProject(@PathVariable Long id) {
+        return ResponseEntity.ok().body(taskService.getTasksByProject(id));
+    }
+
     /**
      * Creates a new task
      *

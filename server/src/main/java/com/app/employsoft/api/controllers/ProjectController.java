@@ -39,6 +39,16 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
+    @GetMapping("/supervisor/{username}")
+    @Operation(summary = "Get projects by supervisor", description = "Returns a list of projects by supervisor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of projects"),
+            @ApiResponse(responseCode = "404", description = "Supervisor not found")
+    })
+    public ResponseEntity<?> getProjectsBySupervisor(@PathVariable String username) {
+        return projectService.getProjectsBySupervisor(username);
+    }
+
     /**
      * Get a project by its identifier
      * 

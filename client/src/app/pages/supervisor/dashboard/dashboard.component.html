@@ -1,1 +1,68 @@
-<p>dashboard works!</p>
+<div class="h-full w-full m-4 p-8 flex flex-wrap items-start justify-start rounded-tl bg-white grid-flow-col auto-cols-max gap-4 overflow-y-scroll">
+  <h1 class="text-3xl font-semibold text-indigo-500">Your projects</h1>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    @for(project of projects; track project.id) {
+    <div class="flex flex-col bg-white rounded-lg shadow-lg">
+      <div class="flex-1 p-6">
+        <h2 class="text-2xl font-bold">{{project.name}}</h2>
+        <p class="mt-2 text-gray-600">{{project.description}}</p>
+
+        <dl class="mt-8 space-y-2">
+          <div class="flex items-center">
+            <dt class="w-16 font-semibold text-gray-600">Status</dt>
+            <dd class="ml-2 text-gray-600">{{project.status}}</dd>
+          </div>
+
+          <div class="flex items-center">
+            <dt class="w-16 font-semibold text-gray-600">Date Started</dt>
+            <dd class="ml-2 text-gray-600">{{project.startDate | date}}</dd>
+          </div>
+
+          <div class="flex items-center">
+            <dt class="w-16 font-semibold text-gray-600">Date End</dt>
+            <dd class="ml-2 text-gray-600">{{project.estimatedEndDate | date}}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="border-t border-gray-200">
+        <dl class="p-6 space-y-2">
+          <dt class="text-lg font-semibold">Tareas del proyecto</dt>
+          <ul class="mt-2 space-y-2">
+            @for(task of project.tasks; track task.id){
+            <li class="p-6 border-b border-gray-200 last:border-b-0">
+              <h4 class="font-bold">{{task.title}}</h4>
+              <p class="mt-2 text-gray-600">{{task.description}}</p>
+
+              <dl class="mt-8 space-y-2">
+                <div class="grid grid-cols-2 gap-4">
+                  <div class="flex items-center">
+                    <dt class="text-gray-700 font-semibold">Status</dt>
+                    <dd class="ml-2 text-gray-600">{{task.status}}</dd>
+                  </div>
+
+                  <div class="flex items-center">
+                    <dt class="text-gray-700 font-semibold">Date Started</dt>
+                    <dd class="ml-2 text-gray-600">{{task.creationDate | date}}</dd>
+                  </div>
+
+                  <div class="flex items-center">
+                    <dt class="text-gray-700 font-semibold">Limit Date</dt>
+                    <dd class="ml-2 text-gray-600">{{task.dueDate | date}}</dd>
+                  </div>
+                </div>
+              </dl>
+
+              <h4 class="mt-8 font-semibold">Assigned to</h4>
+              <p class="mt-2 text-gray-600">{{task.employee.name}} {{task.employee.surname}}</p>
+            </li>
+            }
+
+          </ul>
+        </dl>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+

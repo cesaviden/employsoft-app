@@ -1,0 +1,23 @@
+<div class="h-full w-full m-4 flex flex-wrap items-start justify-start rounded-tl bg-white  grid-flow-col auto-cols-max gap-4 overflow-y-scroll">
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="container mx-auto flex flex-col" style="width: 1150px;">
+        <div class="bg-white rounded-lg p-4 shadow flex flex-col mb-4">
+          <h3 class="font-bold text-3xl mb-2 text-indigo-600">Profile</h3>
+          <div class="flex flex-col">
+            <div class="flex items-center mb-8">
+              <img class="object-cover w-64 h-64 rounded-full shadow-lg mr-8" src="https://picsum.photos/200" alt="Profile">
+              <div class="flex-1">
+                <h1 class="text-3xl text-indigo-600 leading-none">{{user.name}}</h1>
+                <h3 class="text-gray-600">{{user.surname}}</h3>
+                <p class="text-indigo-600 mt-2">Username : <b class="text-gray-600">{{user.username}}</b></p>
+                <p class="text-indigo-600 mt-2">Email : <b class="text-gray-600">{{user.email}}</b></p>
+              </div>
+            </div>
+            <div class="text-center">
+              <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-all p-2 underline">Change Profile Picture</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -5,6 +5,11 @@ import com.app.employsoft.auth.dto.UserResponse;
 import com.app.employsoft.auth.entities.UserEntity;
 import com.app.employsoft.auth.mappers.implementations.UserMapperImpl;
 import com.app.employsoft.auth.repositories.UserDAO;
+import com.app.employsoft.auth.utils.JwtUtils;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -17,10 +22,12 @@ public class UserService {
 
     private UserDAO userDAO;
     private UserMapperImpl userMapper;
+    private JwtUtils jwtUtils;
 
-    public UserService(UserDAO userDAO, UserMapperImpl userMapper) {
+    public UserService(UserDAO userDAO, UserMapperImpl userMapper, JwtUtils jwtUtils) {
         this.userDAO = userDAO;
         this.userMapper = userMapper;
+        this.jwtUtils = jwtUtils;
     }
 
     public Set<UserResponse> getAllUsers() {
@@ -51,5 +58,13 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userDAO.deleteById(id);
+    }
+
+    public UserResponse getUserByJwt(String token) {
+        token = token.replaceFirst("^Bearer ", "");
+        DecodedJWT decodedJWT = jwtUtils.validateToken(token);
+        String username = jwtUtils.extractUsername(decodedJWT);
+        System.out.println(username);
+        return userMapper.toUserDto(userDAO.findByUsername(username).get());
     }
 }

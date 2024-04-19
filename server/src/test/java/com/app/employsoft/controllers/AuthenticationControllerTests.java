@@ -1,30 +1,30 @@
-package com.app.employsoft;
+package com.app.employsoft.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import com.app.employsoft.auth.controllers.AuthenticationController;
 import com.app.employsoft.auth.dto.AuthCreateUserRequest;
 import com.app.employsoft.auth.dto.AuthLoginRequest;
-import com.app.employsoft.auth.entities.UserEntity;
 import com.app.employsoft.auth.exceptions.InvalidCredentialsException;
 import com.app.employsoft.auth.exceptions.UserAlreadyExistsException;
 import com.app.employsoft.auth.services.UserDetailServiceImpl;
 
 @SpringBootTest
+@TestMethodOrder(value = MethodOrderer.OrderAnnotation.class)
 public class AuthenticationControllerTests {
 
     @MockBean
@@ -35,6 +35,7 @@ public class AuthenticationControllerTests {
 
     // Test Successful Sign Up
     @Test
+    @Order(1)
     void testSignUp_Success() throws Exception {
         // Mock user creation
         AuthCreateUserRequest createUserRequest = new AuthCreateUserRequest("johndoe", "password",
@@ -51,6 +52,7 @@ public class AuthenticationControllerTests {
 
     // Test Sign Up with Existing Username
     @Test
+    @Order(2)
     void testSignUp_ExistingUsername() throws Exception {
         AuthCreateUserRequest createUserRequest = new AuthCreateUserRequest("johndoe", "password",
                 "john.doe@example.com", "John", "Doe");
@@ -90,6 +92,7 @@ public class AuthenticationControllerTests {
 
     // Test Login with Invalid Credentials
     @Test
+    @Order(3)
     void testLogin_InvalidCredentials() throws Exception {
         String username = "johndoe";
         String password = "wrongpassword";

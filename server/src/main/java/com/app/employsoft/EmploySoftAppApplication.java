@@ -207,16 +207,19 @@ public class EmploySoftAppApplication {
                         Message message1 = Message.builder()
                                         .content("Message 1 content")
                                         .sender(employeeAnyi)
+                                        .creationDate(today)
                                         .build();
 
                         Message message2 = Message.builder()
                                         .content("Message 2 content")
                                         .sender(supervisorSantiago)
+                                        .creationDate(today.plusDays(2))
                                         .build();
 
                         Message message3 = Message.builder()
                                         .content("Message 3 content")
                                         .sender(employeeAndrea)
+                                        .creationDate(today.plusDays(3))
                                         .build();
 
                         /* SAVE USERS */

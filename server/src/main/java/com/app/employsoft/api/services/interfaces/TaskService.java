@@ -11,6 +11,8 @@ public interface TaskService {
 
     ResponseEntity<?> getTaskById(Long taskId);
 
+    ResponseEntity<?> getTasksByProject(Long projectId);
+
     ResponseEntity<?> saveTask(CreateTaskRequest task);
 
     ResponseEntity<?> updateTask(Long taskId, CreateTaskRequest task);

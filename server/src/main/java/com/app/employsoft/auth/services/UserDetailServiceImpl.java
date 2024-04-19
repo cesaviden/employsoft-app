@@ -9,6 +9,9 @@ import com.app.employsoft.auth.exceptions.InvalidCredentialsException;
 import com.app.employsoft.auth.repositories.RoleDAO;
 import com.app.employsoft.auth.repositories.UserDAO;
 import com.app.employsoft.auth.utils.JwtUtils;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,8 +22,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,7 +50,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        UserEntity userEntity = userDAO.findUserEntityByUsername(username)
+        UserEntity userEntity = userDAO.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password"));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
@@ -86,7 +89,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
             throw new IllegalArgumentException("The surname cannot be empty.");
         }
 
-        UserEntity userFounded = userDAO.findUserEntityByUsername(username).orElse(null);
+        UserEntity userFounded = userDAO.findByUsername(username).orElse(null);
         if (userFounded != null) {
             throw new IllegalArgumentException("The username already exists.");
         }
@@ -165,4 +168,35 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
     }
+
+    public Boolean validateToken(String token) {
+        try {
+            token = token.replaceFirst("^Bearer ", "");
+
+            jwtUtils.validateToken(token);
+            return true;
+        } catch (JWTVerificationException e) {
+            throw new JWTVerificationException("Invalid JWT Token" + token);
+        }
+    }
+
+    public String getRequestRole(String token) {
+        try {
+
+            token = token.replaceFirst("^Bearer ", "");
+            DecodedJWT verifiedToken = jwtUtils.validateToken(token);
+
+            String authorizations = jwtUtils.getSpecificClaim(verifiedToken, "authorities").asString();
+            List<String> authorizationsList = new ArrayList<>(Arrays.asList(authorizations.split(",")));
+            return authorizationsList.stream()
+                    .filter(authorization -> authorization.startsWith("ROLE_"))
+                    .map(authorization -> authorization.substring(5))
+                    .findFirst()
+                    .orElseThrow(() -> new JWTVerificationException("The user doesn't have any role"));
+
+        } catch (Exception e) {
+            throw new JWTVerificationException("Invalid JWT Token");
+        }
+    }
+
 }

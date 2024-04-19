@@ -6,6 +6,6 @@ import com.app.employsoft.auth.entities.UserEntity;
 
 public interface UserDAO extends JpaRepository<UserEntity, Long> {
 
-    Optional<UserEntity> findUserEntityByUsername(String username);
+    Optional<UserEntity> findByUsername(String username);
 
 }

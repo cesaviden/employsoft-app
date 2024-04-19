@@ -62,12 +62,9 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ResponseEntity<?> saveMessage(CreateMessageRequest message) {
         try {
-            if (message.id() != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The message id must be null");
-            } else {
+            System.out.println(message);
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .body(messageMapper.toMessageDto(messageDAO.save(messageMapper.toMessage(message))));
-            }
         } catch (ServerErrorException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
