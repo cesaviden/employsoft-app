@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +19,10 @@ import com.app.employsoft.auth.exceptions.UserAlreadyExistsException;
 import com.app.employsoft.auth.exceptions.InvalidCredentialsException;
 import com.app.employsoft.auth.services.UserDetailServiceImpl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 /**
  * This controller handles the Sign Up and Log In operations.
@@ -74,4 +77,25 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * This endpoint validates the token sent in the Authorization header.
+     *
+     * @param request The HTTP request object
+     * @return ResponseEntity containing the validation status (isValid: true/false)
+     */
+    @PostMapping("/validate-token")
+    @Operation(summary = "Validate Token", description = "Validate the JWT token sent in the Authorization header")
+    @ApiResponse(responseCode = "200", description = "Token is valid", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class)))
+    @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
+    public ResponseEntity<?> validateToken(HttpServletRequest request) {
+        return new ResponseEntity<>(userDetailService.validateToken(request.getHeader("Authorization")), HttpStatus.OK);
+    }
+
+    @GetMapping("/request-role")
+    @Operation(summary = "Request Role", description = "Request the role of the user")
+    @ApiResponse(responseCode = "200", description = "The role was requested successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class)))
+    @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
+    public ResponseEntity<?> getRequestRole(HttpServletRequest request) {
+        return new ResponseEntity<>(userDetailService.getRequestRole(request.getHeader("Authorization")), HttpStatus.OK);
+    }
 }

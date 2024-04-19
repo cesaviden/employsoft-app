@@ -1,16 +1,19 @@
 package com.app.employsoft.api.services.implementations;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+
+import org.hibernate.mapping.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException.InternalServerError;
-
 import com.app.employsoft.api.dto.CreateTaskRequest;
-import com.app.employsoft.api.dto.TaskDTO;
+import com.app.employsoft.api.entities.Project;
 import com.app.employsoft.api.entities.Task;
 import com.app.employsoft.api.mappers.implementations.TaskMapperImpl;
+import com.app.employsoft.api.repositories.ProjectDAO;
 import com.app.employsoft.api.repositories.TaskDAO;
 import com.app.employsoft.api.services.interfaces.TaskService;
 
@@ -19,10 +22,12 @@ public class TaskServiceImpl implements TaskService {
 
     private TaskDAO taskDAO;
     private TaskMapperImpl taskMapper;
+    private ProjectDAO projectDAO;
 
-    public TaskServiceImpl(TaskDAO taskDAO, TaskMapperImpl taskMapper) {
+    public TaskServiceImpl(TaskDAO taskDAO, TaskMapperImpl taskMapper, ProjectDAO projectDAO) {
         this.taskDAO = taskDAO;
         this.taskMapper = taskMapper;
+        this.projectDAO = projectDAO;
     }
 
     @Override
@@ -53,6 +58,23 @@ public class TaskServiceImpl implements TaskService {
             }
         } catch (InternalServerError e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The task could not be retrieved");
+        }
+    }
+
+
+    @Override
+    public ResponseEntity<?> getTasksByProject(Long projectId) {
+        try {
+            HashSet<Project> projects = new HashSet<>();
+            projects.add(projectDAO.findById(projectId).get());
+            List<Task> tasks = taskDAO.findAllByProjects(projects);
+            if (tasks.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No tasks found");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(tasks.stream().map(taskMapper::toTaskDto).toList());
+            }
+        } catch (InternalServerError e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The tasks could not be retrieved");
         }
     }
 

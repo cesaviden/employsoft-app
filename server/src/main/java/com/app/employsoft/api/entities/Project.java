@@ -48,6 +48,6 @@ public class Project {
         private Set<UserEntity> assignedEmployees;
 
         @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(name = "task_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "task_id"))
+        @JoinTable(name = "task_project", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "task_id", nullable = true))
         private Set<Task> tasks;
 }

@@ -1,1 +1,38 @@
-<p>signup works!</p>
+<div class="flex justify-center items-center min-h-screen bg-indigo-300">
+  <div class="w-full overflow-x-auto px-4 lg:px-8">
+    <div class="shadow-md rounded-lg bg-white max-w-md mx-auto p-8">
+      <div class="text-center">
+        <a href="/">
+          <h1 class="text-4xl font-bold text-gray-700 hover:text-indigo-500 transition-all"> EmploySoft </h1>
+        </a>
+      </div>
+      <div class="border-b border-gray-200 mt-8 mb-4"></div>
+
+      <form class="mt-4" (ngSubmit)="signup($event)">
+        <label for="name" class="text-sm text-gray-700 block my-2 font-medium">Name</label>
+        <input type="text" id="name" name="name"  [(ngModel)] ="name" autocomplete="name" class="shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 px-3 py-2">
+
+        <label for="surname" class="text-sm text-gray-700 block my-2 font-medium">Surname</label>
+        <input type="text" id="surname" name="surname" [(ngModel)] ="surname" autocomplete="name" class="shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 px-3 py-2">
+
+        <label for="username" class="text-sm text-gray-700 block my-2 font-medium">Username</label>
+        <input type="text" id="username" name="username" [(ngModel)] ="username" autocomplete="username" class="shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 px-3 py-2">
+
+        <label for="email" class="text-sm text-gray-700 block my-2 font-medium">Email Address</label>
+        <input type="email" id="email" name="email" [(ngModel)] ="email" autocomplete="email" class="shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 px-3 py-2">
+
+        <label for="password" class="text-sm text-gray-700 block my-2 font-medium">Password</label>
+        <input type="password" id="password" name="password" [(ngModel)] ="password" class="shadow-sm rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border border-gray-300 px-3 py-2">
+
+        <button type="submit" class="inline-flex items-center justify-center px-4 py-2 rounded-md bg-indigo-500 text-white shadow hover:bg-indigo-700 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full mt-4">
+          Sign Up
+        </button>
+      </form>
+
+      <span class="text-sm text-gray-500 block mt-6 text-center">
+        Already have an Account?
+        <a [routerLink] = "['/login']" class="text-indigo-600 hover:text-indigo-500 ">Sign In</a>
+      </span>
+    </div>
+  </div>
+</div>

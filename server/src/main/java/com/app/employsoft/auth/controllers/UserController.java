@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,8 @@ public class UserController {
      */
     @Operation(summary = "Retrieves all users", description = "Returns a list of all users")
 
-    @ApiResponse(responseCode = "200", description = "List of all users", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)) })
+    @ApiResponse(responseCode = "200", description = "List of all users", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)) })
     @ApiResponse(responseCode = "500", description = "Cannot retrieve users from database", content = @Content)
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
@@ -53,7 +55,8 @@ public class UserController {
      * @return UserEntity with the requested user.
      */
     @Operation(summary = "Retrieves a user by its id", description = "Returns a user")
-    @ApiResponse(responseCode = "200", description = "User found", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)) })
+    @ApiResponse(responseCode = "200", description = "User found", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)) })
     @ApiResponse(responseCode = "404", description = "User not found")
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
@@ -69,6 +72,30 @@ public class UserController {
         }
     }
 
+    @GetMapping("/jwt")
+    public ResponseEntity<?> getUserByJwt(HttpServletRequest request) {
+        try {
+            UserResponse user = userService.getUserByJwt(request.getHeader("Authorization"));
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cannot retrieve user from database");
+        }
+    }
+
+    // @GetMapping("/role/{role}")
+    // public ResponseEntity<?> getUserByRole(@PathVariable String role) {
+    //     try {
+    //         Set<UserResponse> users = userService.getUsersByRole(role);
+    //         return ResponseEntity.ok(users);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cannot retrieve users from database");
+    //     }
+    // }
+
     /**
      * Updates a user by its id.
      *
@@ -77,8 +104,8 @@ public class UserController {
      * @return UserEntity with the updated data.
      */
     @Operation(summary = "Updates a user by its id", description = "Returns a user")
-
-    @ApiResponse(responseCode = "200", description = "User updated", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))})
+    @ApiResponse(responseCode = "200", description = "User updated", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)) })
     @ApiResponse(responseCode = "404", description = "User not found")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest user) {

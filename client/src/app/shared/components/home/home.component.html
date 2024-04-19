@@ -1,0 +1,24 @@
+<div class="h-full w-full m-4 p-8 flex flex-wrap items-start justify-start rounded-tl bg-white  grid-flow-col auto-cols-max gap-4 overflow-y-scroll">
+  <div class="w-full">
+    <h1 class="text-4xl font-semibold text-indigo-600 mb-4 text-center">Welcome to EmploySoft Projects Portal</h1>
+    <p class="text-gray-600 mb-2 text-lg text-center">Here you can find all the projects that our company is working on,</p>
+    <p class="text-gray-600 mb-2 text-lg text-center">you can check their details, estimated end date, status and the supervisor in charge of the proyects in real time.</p>
+  </div>
+  <hr class="border-2 border-gray-200 my-4 w-full">
+  <div class="w-full">
+    <h1 class="text-3xl font-semibold text-indigo-600 mb-4">Last Projects Created</h1>
+    <p class="text-gray-600">Here you can see the last projects created.</p>
+  </div>
+  @for(project of projects; track project.id) {
+  <article
+    class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow transition-all duration-150 ease-in-out hover:shadow-lg shadow hover:scale-105">
+    <div class="p-4" (click)="goToProject(project)">
+      <h3 class="text-2xl font-semibold mb-2 text-indigo-600">{{ project.name }}</h3>
+      <p class="text-gray-600 mb-2">{{ project.description }}</p>
+      <p class="text-gray-600 mb-2">Estimated end date: {{ project.estimatedEndDate }}</p>
+      <p class="text-gray-600 mb-2">Status: <span class="text-green-600">{{ project.status }}</span></p>
+      <p class="text-gray-600 mb-2">Supervisor: <span class="text-teal-500">{{ project.supervisor.name + ' ' + project.supervisor.surname }}</span></p>
+    </div>
+  </article>
+  }
+

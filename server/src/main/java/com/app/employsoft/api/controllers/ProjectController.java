@@ -39,6 +39,16 @@ public class ProjectController {
         return projectService.getAllProjects();
     }
 
+    @GetMapping("/supervisor/{username}")
+    @Operation(summary = "Get projects by supervisor", description = "Returns a list of projects by supervisor")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of projects"),
+            @ApiResponse(responseCode = "404", description = "Supervisor not found")
+    })
+    public ResponseEntity<?> getProjectsBySupervisor(@PathVariable String username) {
+        return projectService.getProjectsBySupervisor(username);
+    }
+
     /**
      * Get a project by its identifier
      * 
@@ -67,7 +77,11 @@ public class ProjectController {
             @ApiResponse(responseCode = "201", description = "Project created")
     })
     public ResponseEntity<?> saveProject(@RequestBody CreateProjectRequest project) {
-        return projectService.saveProject(project);
+        try {
+            return ResponseEntity.status(201).body(projectService.saveProject(project));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("The project could not be created");
+        }
     }
 
     /**
@@ -117,4 +131,3 @@ public class ProjectController {
         return projectService.deleteAllProjects();
     }
 }
-

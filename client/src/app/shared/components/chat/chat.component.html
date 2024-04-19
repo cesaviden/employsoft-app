@@ -1,0 +1,52 @@
+<div
+  class="h-full w-full m-4 flex flex-wrap items-start justify-start rounded-tl bg-white grid-flow-col auto-cols-max gap-4 overflow-y-scroll"
+>
+  <div class="w-full">
+    <h1 class="text-3xl font-semibold text-indigo-600 mb-4 p-4">Chat</h1>
+  </div>
+  <div class="flex-1 overflow-y-auto p-6">
+    <div class="container mx-auto flex flex-col">
+      <div class="flex flex-col mb-4">
+        <div
+          class="bg-white rounded-lg p-4 shadow flex flex-col"
+          style="width: 1025px"
+        >
+          <div class="flex flex-col overflow-y-scroll h-96">
+            @for(message of messages; track message.id) {
+            <div class="flex mb-2" >
+              <div class="flex-1 ml-2 px-2 py-1 rounded-lg">
+                {{ message.content }}
+                <span class="text-xs text-gray-500">{{
+                  message.creationDate | date : "dd/MM/yyyy"
+                }}</span>
+                <span class="text-xs text-gray-700">
+                  - {{ message.sender.username }}</span
+                >
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col mb-4">
+        <div class="bg-white rounded-lg p-4 shadow flex">
+          <form (ngSubmit)="sendMessage()">
+            <input
+              type="text"
+              class="w-96 flex-1 border rounded-l-md p-2 px-4 py-2 focus:outline-none"
+              name="message"
+              [(ngModel)]="messageText"
+              placeholder="Escribe un mensaje"
+            />
+            <button
+              type="submit"
+              class="ml-2 px-4 py-2 rounded-md bg-indigo-500 text-white font-medium shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
+              >
+              Enviar
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

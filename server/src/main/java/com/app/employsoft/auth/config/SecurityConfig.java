@@ -50,8 +50,15 @@ public class SecurityConfig {
                 http.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll();
                 http.requestMatchers("/auth/**").permitAll();
 
-                    // Configurar los endpoints privados
-                    http.anyRequest().authenticated();
+                    // Configurar los endpoints protegidos
+                    http.requestMatchers("/api/**").authenticated();
+                    http.requestMatchers("/api/projects/supervisor//**").hasRole("SUPERVISOR");
+                    http.requestMatchers("/api/projects/employee/**").hasRole("EMPLOYEE");
+                    http.requestMatchers(HttpMethod.POST).hasAuthority("CREATE");
+                    http.requestMatchers(HttpMethod.PUT).hasAuthority("UPDATE");
+                    http.requestMatchers(HttpMethod.DELETE).hasAuthority("DELETE");
+
+                    http.anyRequest().denyAll();
                 })
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();

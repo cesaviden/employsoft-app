@@ -1,7 +1,16 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
+import { HomeComponent } from './shared/components/home/home.component';
+import { TemplateComponent } from './shared/components/layouts/template/template.component';
+import { ProfileComponent } from './shared/components/profile/profile.component';
+import { ChatComponent } from './shared/components/chat/chat.component';
+import { StartComponent } from './shared/components/layouts/start/start.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    component: StartComponent
+  },
   {
     path: '',
     loadChildren: () =>
@@ -10,25 +19,34 @@ export const routes: Routes = [
 
   {
     path: '',
-    loadChildren: () =>
-      import('./pages/employees/employee.routes').then((m) => m.employeeRoutes),
-  },
+    component: TemplateComponent,
+    children: [
+      {
+        path: 'home',
+        component: HomeComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: '',
+        loadChildren: () => import('./pages/employees/employee.routes').then((m) => m.employeeRoutes),
+        canActivate: [authGuard],
+      },
 
-  {
-    path: '',
-    loadChildren: () =>
-      import('./pages/supervisor/supervisor.routes').then(
-        (m) => m.supervisorRoutes
-      ),
-  },
-
-  {
-    path: 'home',
-    component: HomeComponent,
-  },
-
-  {
-    path: 'profile',
-    component: HomeComponent,
-  },
+      {
+        path: '',
+        loadChildren: () => import('./pages/supervisor/supervisor.routes').then((m) => m.supervisorRoutes),
+        canActivate: [authGuard],
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [authGuard],
+      },
+      {
+        path: 'chat',
+        component: ChatComponent,
+        canActivate: [authGuard],
+      }
+    ]
+  }
 ];

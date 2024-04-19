@@ -13,21 +13,39 @@ import com.app.employsoft.api.entities.Project;
 import com.app.employsoft.api.mappers.implementations.ProjectMapperImpl;
 import com.app.employsoft.api.repositories.ProjectDAO;
 import com.app.employsoft.api.services.interfaces.ProjectService;
+import com.app.employsoft.auth.entities.UserEntity;
+import com.app.employsoft.auth.repositories.UserDAO;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
     private ProjectDAO projectDAO;
     private ProjectMapperImpl projectMapper;
+    private UserDAO userDAO;
 
-    public ProjectServiceImpl(ProjectDAO projectDAO, ProjectMapperImpl projectMapper) {
+    public ProjectServiceImpl(ProjectDAO projectDAO, ProjectMapperImpl projectMapper, UserDAO userDAO) {
         this.projectDAO = projectDAO;
         this.projectMapper = projectMapper;
+        this.userDAO = userDAO;
     }
 
     @Override
     public ResponseEntity<?> getAllProjects() {
         try {
             List<Project> projects = projectDAO.findAll();
+            if (projects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No projects found");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(projects.stream().map(projectMapper::toProjectDto).toList());
+            }
+        } catch (InternalServerError e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The projects could not be retrieved");
+        }
+    }
+
+    public ResponseEntity<?> getProjectsBySupervisor(String username) {
+        try {
+            UserEntity supervisor = userDAO.findByUsername(username).get();
+            List<Project> projects = projectDAO.findAllBySupervisor(supervisor);
             if (projects.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No projects found");
             } else {
@@ -56,14 +74,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ResponseEntity<?> saveProject(CreateProjectRequest project) {
         try {
-
+            System.out.println(project);
             return ResponseEntity.status(HttpStatus.OK).body(projectDAO.save(projectMapper.toProject(project)));
 
         } catch (InternalServerError e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The project could not be created");
         }
     }
-
+    
     @Override
     public ResponseEntity<?> updateProject(Long projectId, CreateProjectRequest project) {
 
