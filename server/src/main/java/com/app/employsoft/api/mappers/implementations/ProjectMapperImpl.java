@@ -30,15 +30,15 @@ public class ProjectMapperImpl implements ProjectMapper {
     public Project toProject(CreateProjectRequest createProjectRequest) {
 
         return new Project(
-                null,
+                createProjectRequest.id(),
                 createProjectRequest.name(),
                 createProjectRequest.description(),
                 createProjectRequest.startDate(),
                 createProjectRequest.estimatedEndDate(),
                 createProjectRequest.status(),
                 userDAO.findById(createProjectRequest.supervisorId()).get(),
-                (new HashSet<>(userDAO.findAllById(createProjectRequest.assignedEmployees()))),
-                (new HashSet<>(taskDAO.findAllById(createProjectRequest.tasks()))));
+                (new HashSet<>(userDAO.findAllById(createProjectRequest.assignedEmployeesId()))),
+                (new HashSet<>(taskDAO.findAllById(createProjectRequest.tasksId()))));
     }
 
     @Override

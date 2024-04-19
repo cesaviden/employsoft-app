@@ -77,7 +77,11 @@ public class ProjectController {
             @ApiResponse(responseCode = "201", description = "Project created")
     })
     public ResponseEntity<?> saveProject(@RequestBody CreateProjectRequest project) {
-        return projectService.saveProject(project);
+        try {
+            return ResponseEntity.status(201).body(projectService.saveProject(project));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("The project could not be created");
+        }
     }
 
     /**
@@ -127,4 +131,3 @@ public class ProjectController {
         return projectService.deleteAllProjects();
     }
 }
-

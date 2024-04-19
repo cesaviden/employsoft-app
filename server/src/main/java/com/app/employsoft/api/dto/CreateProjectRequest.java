@@ -12,12 +12,13 @@ import jakarta.validation.constraints.NotNull;
  * CreateProjectRequest
  */
 public record CreateProjectRequest(
+        Long id,
         @NotBlank String name,
         @NotBlank String description,
         @NotNull LocalDate startDate,
         @NotNull LocalDate estimatedEndDate,
         @NotNull ProjectStatus status,
         @NotNull Long supervisorId,
-        @NotNull Set<Long> assignedEmployees,
-        @NotNull Set<Long> tasks) {
+        @NotNull Set<Long> assignedEmployeesId,
+        @NotNull Set<Long> tasksId) {
 }

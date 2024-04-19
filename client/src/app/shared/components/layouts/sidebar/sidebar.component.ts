@@ -18,7 +18,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void { 
 
     this.authService.requestRole().subscribe((data: any) => {
-      this.roleUser = data.role;
+      this.roleUser = data.name;
     })
   }
 

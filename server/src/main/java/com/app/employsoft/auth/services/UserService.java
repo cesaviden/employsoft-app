@@ -7,9 +7,6 @@ import com.app.employsoft.auth.mappers.implementations.UserMapperImpl;
 import com.app.employsoft.auth.repositories.UserDAO;
 import com.app.employsoft.auth.utils.JwtUtils;
 import com.auth0.jwt.interfaces.DecodedJWT;
-
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

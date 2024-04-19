@@ -3,6 +3,7 @@ package com.app.employsoft.auth.services;
 import com.app.employsoft.auth.dto.AuthCreateUserRequest;
 import com.app.employsoft.auth.dto.AuthLoginRequest;
 import com.app.employsoft.auth.dto.AuthResponse;
+import com.app.employsoft.auth.dto.RoleResponse;
 import com.app.employsoft.auth.entities.RoleEntity;
 import com.app.employsoft.auth.entities.UserEntity;
 import com.app.employsoft.auth.exceptions.InvalidCredentialsException;
@@ -180,7 +181,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         }
     }
 
-    public String getRequestRole(String token) {
+    public RoleResponse getRequestRole(String token) {
         try {
 
             token = token.replaceFirst("^Bearer ", "");
@@ -188,11 +189,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
             String authorizations = jwtUtils.getSpecificClaim(verifiedToken, "authorities").asString();
             List<String> authorizationsList = new ArrayList<>(Arrays.asList(authorizations.split(",")));
-            return authorizationsList.stream()
-                    .filter(authorization -> authorization.startsWith("ROLE_"))
-                    .map(authorization -> authorization.substring(5))
-                    .findFirst()
-                    .orElseThrow(() -> new JWTVerificationException("The user doesn't have any role"));
+
+            return new RoleResponse(authorizationsList.stream()
+            .filter(authorization -> authorization.startsWith("ROLE_"))
+            .map(authorization -> authorization.substring(5))
+            .findFirst()
+            .orElseThrow(() -> new JWTVerificationException("The user doesn't have any role")));
 
         } catch (Exception e) {
             throw new JWTVerificationException("Invalid JWT Token");

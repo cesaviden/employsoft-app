@@ -10,6 +10,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   return authService.isAuthenticated().pipe(
     map(isAuthenticated => {
       if (!isAuthenticated) {
+        sessionStorage.removeItem('JWT_TOKEN');
         routerService.navigate(['/']);
         return false;
       }

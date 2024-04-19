@@ -90,4 +90,12 @@ public class AuthenticationController {
     public ResponseEntity<?> validateToken(HttpServletRequest request) {
         return new ResponseEntity<>(userDetailService.validateToken(request.getHeader("Authorization")), HttpStatus.OK);
     }
+
+    @GetMapping("/request-role")
+    @Operation(summary = "Request Role", description = "Request the role of the user")
+    @ApiResponse(responseCode = "200", description = "The role was requested successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Map.class)))
+    @ApiResponse(responseCode = "401", description = "Invalid token", content = @Content)
+    public ResponseEntity<?> getRequestRole(HttpServletRequest request) {
+        return new ResponseEntity<>(userDetailService.getRequestRole(request.getHeader("Authorization")), HttpStatus.OK);
+    }
 }

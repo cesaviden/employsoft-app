@@ -74,14 +74,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ResponseEntity<?> saveProject(CreateProjectRequest project) {
         try {
-
+            System.out.println(project);
             return ResponseEntity.status(HttpStatus.OK).body(projectDAO.save(projectMapper.toProject(project)));
 
         } catch (InternalServerError e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The project could not be created");
         }
     }
-
+    
     @Override
     public ResponseEntity<?> updateProject(Long projectId, CreateProjectRequest project) {
 

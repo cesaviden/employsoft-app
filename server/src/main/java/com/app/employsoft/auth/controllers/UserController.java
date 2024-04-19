@@ -86,6 +86,16 @@ public class UserController {
         }
     }
 
+    // @GetMapping("/role/{role}")
+    // public ResponseEntity<?> getUserByRole(@PathVariable String role) {
+    //     try {
+    //         Set<UserResponse> users = userService.getUsersByRole(role);
+    //         return ResponseEntity.ok(users);
+    //     } catch (Exception e) {
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Cannot retrieve users from database");
+    //     }
+    // }
+
     /**
      * Updates a user by its id.
      *
