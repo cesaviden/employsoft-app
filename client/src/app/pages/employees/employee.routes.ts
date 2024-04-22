@@ -8,7 +8,7 @@ export const employeeRoutes: Routes = [
         component: ProjectsComponent
     },
     {
-        path: 'project/:id',
+        path: 'tasks',
         component: TasksComponent
     }
 ]

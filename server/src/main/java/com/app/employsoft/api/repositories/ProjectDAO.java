@@ -10,7 +10,7 @@ import com.app.employsoft.auth.entities.UserEntity;
 public interface ProjectDAO extends JpaRepository<Project, Long> {
 
     List<Project> findAllBySupervisor(UserEntity supervisor);
-    List<Project> findAllByAssignedEmployees(UserEntity employee);
+    List<Project> findAllByAssignedEmployees(List<UserEntity> employees);
     /*
     @Modifying
     @Query("UPDATE Project p SET p.assignedEmployees = array_append(p.assignedEmployees, :employee) WHERE p.id = :projectId")

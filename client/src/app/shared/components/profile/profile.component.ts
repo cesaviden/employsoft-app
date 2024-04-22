@@ -34,6 +34,7 @@ export class ProfileComponent implements OnInit {
   updateUser(event: Event) {
     this.userService.updateUser(this.user).subscribe(
       (data) => {
+        this.user = data;
       }
     );
   }

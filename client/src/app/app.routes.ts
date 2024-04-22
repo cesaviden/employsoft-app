@@ -5,11 +5,12 @@ import { ProfileComponent } from './shared/components/profile/profile.component'
 import { ChatComponent } from './shared/components/chat/chat.component';
 import { StartComponent } from './shared/components/layouts/start/start.component';
 import { authGuard } from './core/guards/auth.guard';
+import { TasksProjectComponent } from './shared/components/tasksProjects/tasksproject.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: StartComponent
+    component: StartComponent,
   },
   {
     path: '',
@@ -28,14 +29,24 @@ export const routes: Routes = [
       },
       {
         path: '',
-        loadChildren: () => import('./pages/employees/employee.routes').then((m) => m.employeeRoutes),
+        loadChildren: () =>
+          import('./pages/employees/employee.routes').then(
+            (m) => m.employeeRoutes
+          ),
         canActivate: [authGuard],
       },
 
       {
         path: '',
-        loadChildren: () => import('./pages/supervisor/supervisor.routes').then((m) => m.supervisorRoutes),
+        loadChildren: () =>
+          import('./pages/supervisor/supervisor.routes').then(
+            (m) => m.supervisorRoutes
+          ),
         canActivate: [authGuard],
+      },
+      {
+        path: 'project/:id',
+        component: TasksProjectComponent,
       },
       {
         path: 'profile',
@@ -46,7 +57,7 @@ export const routes: Routes = [
         path: 'chat',
         component: ChatComponent,
         canActivate: [authGuard],
-      }
-    ]
-  }
+      },
+    ],
+  },
 ];

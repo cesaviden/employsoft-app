@@ -1,5 +1,6 @@
 package com.app.employsoft.api.services.implementations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +69,21 @@ public class ProjectServiceImpl implements ProjectService {
         } catch (InternalServerError e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("The project " + projectId + " could not be retrieved");
+        }
+    }
+
+    public ResponseEntity<?> getProjectsByEmployee(String username) {
+        try {
+            List<UserEntity> employees = new ArrayList<>(); 
+            employees.add(userDAO.findByUsername(username).get());
+            List<Project> projects = projectDAO.findAllByAssignedEmployees(employees);
+            if (projects.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No projects found");
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(projects.stream().map(projectMapper::toProjectDto).toList());
+            }
+        } catch (InternalServerError e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The projects could not be retrieved");
         }
     }
 
